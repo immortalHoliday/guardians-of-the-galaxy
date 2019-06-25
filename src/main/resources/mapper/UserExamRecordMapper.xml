@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.neuedu.web02.dao.UserExamRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.neuedu.web02.entity.UserExamRecord" >
+    <id column="examid" property="examid" jdbcType="INTEGER" />
+    <id column="userid" property="userid" jdbcType="INTEGER" />
+    <result column="istest" property="istest" jdbcType="INTEGER" />
+    <result column="duringtime" property="duringtime" jdbcType="INTEGER" />
+    <result column="switchtime" property="switchtime" jdbcType="INTEGER" />
+    <result column="judge" property="judge" jdbcType="INTEGER" />
+    <result column="totalgetscore" property="totalgetscore" jdbcType="DECIMAL" />
+    <result column="submitpaper" property="submitpaper" jdbcType="INTEGER" />
+    <result column="backup1" property="backup1" jdbcType="VARCHAR" />
+    <result column="backup2" property="backup2" jdbcType="INTEGER" />
+    <result column="backup3" property="backup3" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    examid, userid, istest, duringtime, switchtime, judge, totalgetscore, submitpaper, 
+    backup1, backup2, backup3
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.neuedu.web02.entity.UserExamRecordExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from userexamrecord
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.neuedu.web02.entity.UserExamRecordKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from userexamrecord
+    where examid = #{examid,jdbcType=INTEGER}
+      and userid = #{userid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.neuedu.web02.entity.UserExamRecordKey" >
+    delete from userexamrecord
+    where examid = #{examid,jdbcType=INTEGER}
+      and userid = #{userid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.neuedu.web02.entity.UserExamRecordExample" >
+    delete from userexamrecord
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.neuedu.web02.entity.UserExamRecord" >
+    insert into userexamrecord (examid, userid, istest, 
+      duringtime, switchtime, judge, 
+      totalgetscore, submitpaper, backup1, 
+      backup2, backup3)
+    values (#{examid,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, #{istest,jdbcType=INTEGER}, 
+      #{duringtime,jdbcType=INTEGER}, #{switchtime,jdbcType=INTEGER}, #{judge,jdbcType=INTEGER}, 
+      #{totalgetscore,jdbcType=DECIMAL}, #{submitpaper,jdbcType=INTEGER}, #{backup1,jdbcType=VARCHAR}, 
+      #{backup2,jdbcType=INTEGER}, #{backup3,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.neuedu.web02.entity.UserExamRecord" >
+    insert into userexamrecord
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="examid != null" >
+        examid,
+      </if>
+      <if test="userid != null" >
+        userid,
+      </if>
+      <if test="istest != null" >
+        istest,
+      </if>
+      <if test="duringtime != null" >
+        duringtime,
+      </if>
+      <if test="switchtime != null" >
+        switchtime,
+      </if>
+      <if test="judge != null" >
+        judge,
+      </if>
+      <if test="totalgetscore != null" >
+        totalgetscore,
+      </if>
+      <if test="submitpaper != null" >
+        submitpaper,
+      </if>
+      <if test="backup1 != null" >
+        backup1,
+      </if>
+      <if test="backup2 != null" >
+        backup2,
+      </if>
+      <if test="backup3 != null" >
+        backup3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="examid != null" >
+        #{examid,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="istest != null" >
+        #{istest,jdbcType=INTEGER},
+      </if>
+      <if test="duringtime != null" >
+        #{duringtime,jdbcType=INTEGER},
+      </if>
+      <if test="switchtime != null" >
+        #{switchtime,jdbcType=INTEGER},
+      </if>
+      <if test="judge != null" >
+        #{judge,jdbcType=INTEGER},
+      </if>
+      <if test="totalgetscore != null" >
+        #{totalgetscore,jdbcType=DECIMAL},
+      </if>
+      <if test="submitpaper != null" >
+        #{submitpaper,jdbcType=INTEGER},
+      </if>
+      <if test="backup1 != null" >
+        #{backup1,jdbcType=VARCHAR},
+      </if>
+      <if test="backup2 != null" >
+        #{backup2,jdbcType=INTEGER},
+      </if>
+      <if test="backup3 != null" >
+        #{backup3,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.neuedu.web02.entity.UserExamRecordExample" resultType="java.lang.Integer" >
+    select count(*) from userexamrecord
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update userexamrecord
+    <set >
+      <if test="record.examid != null" >
+        examid = #{record.examid,jdbcType=INTEGER},
+      </if>
+      <if test="record.userid != null" >
+        userid = #{record.userid,jdbcType=INTEGER},
+      </if>
+      <if test="record.istest != null" >
+        istest = #{record.istest,jdbcType=INTEGER},
+      </if>
+      <if test="record.duringtime != null" >
+        duringtime = #{record.duringtime,jdbcType=INTEGER},
+      </if>
+      <if test="record.switchtime != null" >
+        switchtime = #{record.switchtime,jdbcType=INTEGER},
+      </if>
+      <if test="record.judge != null" >
+        judge = #{record.judge,jdbcType=INTEGER},
+      </if>
+      <if test="record.totalgetscore != null" >
+        totalgetscore = #{record.totalgetscore,jdbcType=DECIMAL},
+      </if>
+      <if test="record.submitpaper != null" >
+        submitpaper = #{record.submitpaper,jdbcType=INTEGER},
+      </if>
+      <if test="record.backup1 != null" >
+        backup1 = #{record.backup1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.backup2 != null" >
+        backup2 = #{record.backup2,jdbcType=INTEGER},
+      </if>
+      <if test="record.backup3 != null" >
+        backup3 = #{record.backup3,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update userexamrecord
+    set examid = #{record.examid,jdbcType=INTEGER},
+      userid = #{record.userid,jdbcType=INTEGER},
+      istest = #{record.istest,jdbcType=INTEGER},
+      duringtime = #{record.duringtime,jdbcType=INTEGER},
+      switchtime = #{record.switchtime,jdbcType=INTEGER},
+      judge = #{record.judge,jdbcType=INTEGER},
+      totalgetscore = #{record.totalgetscore,jdbcType=DECIMAL},
+      submitpaper = #{record.submitpaper,jdbcType=INTEGER},
+      backup1 = #{record.backup1,jdbcType=VARCHAR},
+      backup2 = #{record.backup2,jdbcType=INTEGER},
+      backup3 = #{record.backup3,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.neuedu.web02.entity.UserExamRecord" >
+    update userexamrecord
+    <set >
+      <if test="istest != null" >
+        istest = #{istest,jdbcType=INTEGER},
+      </if>
+      <if test="duringtime != null" >
+        duringtime = #{duringtime,jdbcType=INTEGER},
+      </if>
+      <if test="switchtime != null" >
+        switchtime = #{switchtime,jdbcType=INTEGER},
+      </if>
+      <if test="judge != null" >
+        judge = #{judge,jdbcType=INTEGER},
+      </if>
+      <if test="totalgetscore != null" >
+        totalgetscore = #{totalgetscore,jdbcType=DECIMAL},
+      </if>
+      <if test="submitpaper != null" >
+        submitpaper = #{submitpaper,jdbcType=INTEGER},
+      </if>
+      <if test="backup1 != null" >
+        backup1 = #{backup1,jdbcType=VARCHAR},
+      </if>
+      <if test="backup2 != null" >
+        backup2 = #{backup2,jdbcType=INTEGER},
+      </if>
+      <if test="backup3 != null" >
+        backup3 = #{backup3,jdbcType=INTEGER},
+      </if>
+    </set>
+    where examid = #{examid,jdbcType=INTEGER}
+      and userid = #{userid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.neuedu.web02.entity.UserExamRecord" >
+    update userexamrecord
+    set istest = #{istest,jdbcType=INTEGER},
+      duringtime = #{duringtime,jdbcType=INTEGER},
+      switchtime = #{switchtime,jdbcType=INTEGER},
+      judge = #{judge,jdbcType=INTEGER},
+      totalgetscore = #{totalgetscore,jdbcType=DECIMAL},
+      submitpaper = #{submitpaper,jdbcType=INTEGER},
+      backup1 = #{backup1,jdbcType=VARCHAR},
+      backup2 = #{backup2,jdbcType=INTEGER},
+      backup3 = #{backup3,jdbcType=INTEGER}
+    where examid = #{examid,jdbcType=INTEGER}
+      and userid = #{userid,jdbcType=INTEGER}
+  </update>
+</mapper>

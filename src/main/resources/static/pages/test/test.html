@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+<!-- 	<link rel="stylesheet" href="/static/css/test/test.css" th:href="@{static/css/test/test.css}">
+	<script type="text/javascript" src="/static/js/test.js" th:src="@{static/js/test.js}"></script> -->
+
+	<link rel="stylesheet"  th:href="@{static/css/test/test.css}">
+	<script type="text/javascript"  th:src="@{static/js/test.js}"></script>
+</head>
+<body>
+	这里是测试11 hello
+	<img src="/static/css/test/starwar.jpg">
+	<input type="text" th:value="@{static/css/test/test.css}">
+</body>
+</html>

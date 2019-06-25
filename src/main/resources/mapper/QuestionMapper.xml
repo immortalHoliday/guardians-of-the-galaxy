@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.neuedu.web02.dao.QuestionMapper" >
+  <resultMap id="BaseResultMap" type="com.neuedu.web02.entity.Question" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="typeid" property="typeid" jdbcType="INTEGER" />
+    <result column="difflevel" property="difflevel" jdbcType="INTEGER" />
+    <result column="labelid" property="labelid" jdbcType="INTEGER" />
+    <result column="answer" property="answer" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="descriptioniconpath" property="descriptioniconpath" jdbcType="VARCHAR" />
+    <result column="analysis" property="analysis" jdbcType="VARCHAR" />
+    <result column="analysisiconpath" property="analysisiconpath" jdbcType="VARCHAR" />
+    <result column="bankid" property="bankid" jdbcType="INTEGER" />
+    <result column="backup1" property="backup1" jdbcType="VARCHAR" />
+    <result column="backup2" property="backup2" jdbcType="INTEGER" />
+    <result column="backup3" property="backup3" jdbcType="INTEGER" />
+    <result column="backup4" property="backup4" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, typeid, difflevel, labelid, answer, description, descriptioniconpath, analysis, 
+    analysisiconpath, bankid, backup1, backup2, backup3, backup4
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.neuedu.web02.entity.QuestionExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from question
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from question
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from question
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.neuedu.web02.entity.QuestionExample" >
+    delete from question
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.neuedu.web02.entity.Question" >
+    insert into question (id, typeid, difflevel, 
+      labelid, answer, description, 
+      descriptioniconpath, analysis, analysisiconpath, 
+      bankid, backup1, backup2, 
+      backup3, backup4)
+    values (#{id,jdbcType=INTEGER}, #{typeid,jdbcType=INTEGER}, #{difflevel,jdbcType=INTEGER}, 
+      #{labelid,jdbcType=INTEGER}, #{answer,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{descriptioniconpath,jdbcType=VARCHAR}, #{analysis,jdbcType=VARCHAR}, #{analysisiconpath,jdbcType=VARCHAR}, 
+      #{bankid,jdbcType=INTEGER}, #{backup1,jdbcType=VARCHAR}, #{backup2,jdbcType=INTEGER}, 
+      #{backup3,jdbcType=INTEGER}, #{backup4,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.neuedu.web02.entity.Question" useGeneratedKeys="true" keyProperty="id">
+    insert into question
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="typeid != null" >
+        typeid,
+      </if>
+      <if test="difflevel != null" >
+        difflevel,
+      </if>
+      <if test="labelid != null" >
+        labelid,
+      </if>
+      <if test="answer != null" >
+        answer,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="descriptioniconpath != null" >
+        descriptioniconpath,
+      </if>
+      <if test="analysis != null" >
+        analysis,
+      </if>
+      <if test="analysisiconpath != null" >
+        analysisiconpath,
+      </if>
+      <if test="bankid != null" >
+        bankid,
+      </if>
+      <if test="backup1 != null" >
+        backup1,
+      </if>
+      <if test="backup2 != null" >
+        backup2,
+      </if>
+      <if test="backup3 != null" >
+        backup3,
+      </if>
+      <if test="backup4 != null" >
+        backup4,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="typeid != null" >
+        #{typeid,jdbcType=INTEGER},
+      </if>
+      <if test="difflevel != null" >
+        #{difflevel,jdbcType=INTEGER},
+      </if>
+      <if test="labelid != null" >
+        #{labelid,jdbcType=INTEGER},
+      </if>
+      <if test="answer != null" >
+        #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="descriptioniconpath != null" >
+        #{descriptioniconpath,jdbcType=VARCHAR},
+      </if>
+      <if test="analysis != null" >
+        #{analysis,jdbcType=VARCHAR},
+      </if>
+      <if test="analysisiconpath != null" >
+        #{analysisiconpath,jdbcType=VARCHAR},
+      </if>
+      <if test="bankid != null" >
+        #{bankid,jdbcType=INTEGER},
+      </if>
+      <if test="backup1 != null" >
+        #{backup1,jdbcType=VARCHAR},
+      </if>
+      <if test="backup2 != null" >
+        #{backup2,jdbcType=INTEGER},
+      </if>
+      <if test="backup3 != null" >
+        #{backup3,jdbcType=INTEGER},
+      </if>
+      <if test="backup4 != null" >
+        #{backup4,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.neuedu.web02.entity.QuestionExample" resultType="java.lang.Integer" >
+    select count(*) from question
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update question
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.typeid != null" >
+        typeid = #{record.typeid,jdbcType=INTEGER},
+      </if>
+      <if test="record.difflevel != null" >
+        difflevel = #{record.difflevel,jdbcType=INTEGER},
+      </if>
+      <if test="record.labelid != null" >
+        labelid = #{record.labelid,jdbcType=INTEGER},
+      </if>
+      <if test="record.answer != null" >
+        answer = #{record.answer,jdbcType=VARCHAR},
+      </if>
+      <if test="record.description != null" >
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+      <if test="record.descriptioniconpath != null" >
+        descriptioniconpath = #{record.descriptioniconpath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.analysis != null" >
+        analysis = #{record.analysis,jdbcType=VARCHAR},
+      </if>
+      <if test="record.analysisiconpath != null" >
+        analysisiconpath = #{record.analysisiconpath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankid != null" >
+        bankid = #{record.bankid,jdbcType=INTEGER},
+      </if>
+      <if test="record.backup1 != null" >
+        backup1 = #{record.backup1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.backup2 != null" >
+        backup2 = #{record.backup2,jdbcType=INTEGER},
+      </if>
+      <if test="record.backup3 != null" >
+        backup3 = #{record.backup3,jdbcType=INTEGER},
+      </if>
+      <if test="record.backup4 != null" >
+        backup4 = #{record.backup4,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update question
+    set id = #{record.id,jdbcType=INTEGER},
+      typeid = #{record.typeid,jdbcType=INTEGER},
+      difflevel = #{record.difflevel,jdbcType=INTEGER},
+      labelid = #{record.labelid,jdbcType=INTEGER},
+      answer = #{record.answer,jdbcType=VARCHAR},
+      description = #{record.description,jdbcType=VARCHAR},
+      descriptioniconpath = #{record.descriptioniconpath,jdbcType=VARCHAR},
+      analysis = #{record.analysis,jdbcType=VARCHAR},
+      analysisiconpath = #{record.analysisiconpath,jdbcType=VARCHAR},
+      bankid = #{record.bankid,jdbcType=INTEGER},
+      backup1 = #{record.backup1,jdbcType=VARCHAR},
+      backup2 = #{record.backup2,jdbcType=INTEGER},
+      backup3 = #{record.backup3,jdbcType=INTEGER},
+      backup4 = #{record.backup4,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.neuedu.web02.entity.Question" >
+    update question
+    <set >
+      <if test="typeid != null" >
+        typeid = #{typeid,jdbcType=INTEGER},
+      </if>
+      <if test="difflevel != null" >
+        difflevel = #{difflevel,jdbcType=INTEGER},
+      </if>
+      <if test="labelid != null" >
+        labelid = #{labelid,jdbcType=INTEGER},
+      </if>
+      <if test="answer != null" >
+        answer = #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="descriptioniconpath != null" >
+        descriptioniconpath = #{descriptioniconpath,jdbcType=VARCHAR},
+      </if>
+      <if test="analysis != null" >
+        analysis = #{analysis,jdbcType=VARCHAR},
+      </if>
+      <if test="analysisiconpath != null" >
+        analysisiconpath = #{analysisiconpath,jdbcType=VARCHAR},
+      </if>
+      <if test="bankid != null" >
+        bankid = #{bankid,jdbcType=INTEGER},
+      </if>
+      <if test="backup1 != null" >
+        backup1 = #{backup1,jdbcType=VARCHAR},
+      </if>
+      <if test="backup2 != null" >
+        backup2 = #{backup2,jdbcType=INTEGER},
+      </if>
+      <if test="backup3 != null" >
+        backup3 = #{backup3,jdbcType=INTEGER},
+      </if>
+      <if test="backup4 != null" >
+        backup4 = #{backup4,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.neuedu.web02.entity.Question" >
+    update question
+    set typeid = #{typeid,jdbcType=INTEGER},
+      difflevel = #{difflevel,jdbcType=INTEGER},
+      labelid = #{labelid,jdbcType=INTEGER},
+      answer = #{answer,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      descriptioniconpath = #{descriptioniconpath,jdbcType=VARCHAR},
+      analysis = #{analysis,jdbcType=VARCHAR},
+      analysisiconpath = #{analysisiconpath,jdbcType=VARCHAR},
+      bankid = #{bankid,jdbcType=INTEGER},
+      backup1 = #{backup1,jdbcType=VARCHAR},
+      backup2 = #{backup2,jdbcType=INTEGER},
+      backup3 = #{backup3,jdbcType=INTEGER},
+      backup4 = #{backup4,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

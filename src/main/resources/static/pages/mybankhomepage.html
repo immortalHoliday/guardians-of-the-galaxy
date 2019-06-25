@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>牛X考试平台-题库主页</title>
+    <meta name="keywords" content="牛X测试平台,老师在线创建题库、在线创建试卷、邮件邀请学生考试">
+    <meta name="description" content="牛X测试平台是一个完全响应式，基于Bootstrap3最新版本开发的扁平化平台，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+
+    <link href="favicon.ico" th:href="@{static/pages/favicon.ico}" rel="shortcut icon"> 
+    <link href="../bank/css/bootstrap.min.css" th:href="@{static/bank/css/bootstrap.min.css}" rel="stylesheet">
+    <link href="../bank/css/bootstrap.min.css" th:href="@{static/bank/css/font-awesome.min.css}" rel="stylesheet">
+
+    <link href="../bank/css/bootstrap.min.css" th:href="@{static/bank/css/animate.min.css}" rel="stylesheet">
+    <link href="../bank/css/style.min.css" th:href="@{static/bank/css/style.min.css}" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-sm-2">
+            <h2>我的题库</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="mybankhomepage.html" th:href="@{BankPageThy}">主页</a>
+                </li>
+                <li>
+                    <strong>我的题库</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-sm-10">
+            
+            <!-- 创建题库按钮 -->
+            <div class="col-sm-12 title-action">
+                <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#buildNewBankModal">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    创建题库
+                </button>
+            </div>
+            <!-- 创建题库按钮 -->
+
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content">
+        
+        <!-- 工具栏位置 -->
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- 基本面板开始 -->
+                <div class="ibox float-e-margins">
+
+                    <!-- box的内容开始 -->
+                    <div class="ibox-content">
+
+                        
+                        <button href="../pages/mybankhomepage.html" th:href="@{static/pages/mybankhomepage.html}" class="btn btn-info">
+                            <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+                            归档
+                        </button>
+                        
+                        <!-- <a href="../pages/mybankhomepage.html" th:href="@{static/pages/mybankhomepage.html}" class="btn btn-info">归档</a> -->
+                        <button href="../pages/mybankhomepage.html" th:href="@{static/pages/mybankhomepage.html}" class="btn btn-info">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                            删除
+                        </button>
+                        
+                        <button href="../pages/mybankhomepage.html" th:href="@{static/pages/mybankhomepage.html}" class="btn btn-info">
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                            重命名
+                        </button>
+
+                        <button href="../pages/mybankhomepage.html" th:href="@{static/pages/mybankhomepage.html}" class="btn btn-info">
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                            移动到
+                        </button>
+
+                        <button href="../pages/mybankhomepage.html" th:href="@{static/pages/mybankhomepage.html}" class="btn btn-info">
+                            <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+                            新建文件夹
+                        </button>
+                        
+                    </div>
+                    <!-- box内容结束 -->
+                </div>
+                <!-- 基本面板结束 -->
+            </div>
+        </div>
+        <!-- 工具栏位置结束 -->
+
+        <!-- 文件夹位置 -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+
+                    <div class="ibox-content">
+                        <h2>文件夹区域，这里提供文件夹的操作<br/></h2>
+                        <p>在 小新 上下载了一个jquery实现的虚拟文件夹，之后放到这里</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- 文件夹位置结束 -->
+
+        <!-- 题库位置 -->
+        <div id="bankContainer" class="row">
+
+            <!-- 这里放置题库，使用模板生成 -->
+            <!-- 一个题库 -->
+            <div class="col-sm-4" th:each="bank : ${bankList}" th:id="@{'bank_'+${bank.id}}">
+                <div class="ibox float-e-margins" >
+
+                    <!-- 题库开头标题栏 -->
+                    <div class="ibox-title">
+                        <h5>
+                            <small class="m-l-sm" th:text="${bank.time}"></small>
+                        </h5>
+                        <div class="ibox-tools">
+
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-user" style="min-width:100px">
+
+                                <li>
+                                    
+                                    <a href="#">
+                                        <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                                        分享题库
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="editBank" th:data-editBankId="${bank.id}" data-toggle="modal" data-target="#editBankModal">
+                                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                        编辑题库
+                                    </a>
+
+                                </li>
+
+                                <li>
+                                    <a href="#">
+                                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                        题库查重
+                                    </a>
+                                </li>
+
+                                <li role="separator" class="divider"></li>
+
+                                <li>
+                                    <a href="#">
+                                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                                        移动到
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="#">
+                                        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+                                        归档
+                                    </a>
+                                </li>
+
+                            </ul>
+
+                            <!-- <a data-delete="delete" class="recycleBank">
+                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                            </a> -->
+                            <a class="removeA" data-delete="delete" data-toggle="modal" data-target="#sureToDelete">
+                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- 题库开头标题栏结束 -->
+
+                    <!-- 题库主体内容 -->
+                    <div class="ibox-content">
+                        <a th:href="@{'bankShowQuestionPage?thisId='+${bank.id}}">
+                            <h2 th:data-title-id="${bank.id}" th:text="${bank.name}">
+                                <br/>
+                            </h2>
+                        </a>
+                        
+                        <p th:data-body-id="${bank.id}" th:text="${bank.description}">
+                            
+                        </p>
+                        
+                        <!-- 使用分割线 -->
+                        <h5 class="page-header"></h5>
+
+                        <div class="row">
+                            <div class="col-sm-3 col-sm-offset-1">
+                            <h1 style="display: inline; color: #ED9121;" th:text="${countMap[bank.id]}"></h1>
+
+                            <small>道题</small>
+                            </div>
+
+                            <div class="col-sm-4 col-sm-offset-4">
+                            <a th:data-addbtn-id="${bank.id}" th:href="@{'bankAddQuestionPage?thisId='+${bank.id}}" class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                添加试题
+                            </a>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <!-- 题库主体内容结束 -->
+
+                </div>
+            </div>
+            <!-- 一个题库结束 -->
+
+        </div>
+        <!-- 题库位置结束 -->
+
+    </div>
+
+    <script src="../bank/js/jquery-2.2.4.js" th:src="@{static/bank/js/jquery-2.2.4.js}"></script>
+    <script src="../bank/js/bootstrap.min.js" th:src="@{static/bank/js/bootstrap.min.js}"></script>
+    <script src="../bank/js/content.min.js" th:src="@{static/bank/js/content.min.js}"></script>
+    <script src="../bank/js/bankCenter.js" th:src="@{static/bank/js/bankCenter.js}" type="text/javascript"></script>
+
+    <script type="text/javascript" th:inline="javascript">
+        $(function(){
+            // console.log("inner");
+            // var text = $("#initCache").val();
+            // var bankList = [[${bankList}]];
+            // var sessiondata = [[${session.user.id}]];
+            // console.log("bankList:",bankList);
+            // console.log("text:",text);
+            // console.log('sessiondata:',sessiondata);
+        });
+        
+    </script>
+    
+    <!-- 新建题库模态框 -->
+    <div class="modal fade" id="buildNewBankModal" tabindex="-1" role="dialog" aria-labelledby="BuildNewBankModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          
+          <!-- 模态框标题栏 -->
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="newBankLabel">添加一个新题库</h4>
+          </div>
+          
+          <!-- 模态框主体内容 -->
+          <div class="modal-body">
+            <form>
+
+              <div class="form-group">
+                <label for="recipient-name" class="control-label">*题库名称：</label>
+                <input type="text" class="form-control" id="name">
+              </div>
+
+              <div class="form-group">
+                <label for="message-text" class="control-label">*题库描述：</label>
+                <textarea class="form-control" id="description"></textarea>
+              </div>
+
+            </form>
+          </div>
+          
+          <!-- 模态框底部按钮 -->
+          <div class="modal-footer">
+            <button id="newBankAddBtn" type="button" class="btn btn-success" data-dismiss="modal">添加</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- 新建题库模态框 -->
+
+    <!-- 修改题库名称、标题模态框 -->
+    <div class="modal fade" id="editBankModal" tabindex="-1" role="dialog" aria-labelledby="EditBankModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          
+          <!-- 模态框标题栏 -->
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="editBankLabel">编辑题库</h4>
+          </div>
+          
+          <!-- 模态框主体内容 -->
+          <div class="modal-body">
+            <form>
+
+              <div class="form-group">
+                <label for="recipient-name" class="control-label">*题库名称：</label>
+                <input type="text" class="form-control" id="newName">
+              </div>
+
+              <div class="form-group">
+                <label for="message-text" class="control-label">*题库描述：</label>
+                <textarea class="form-control" id="newDescription"></textarea>
+              </div>
+
+            </form>
+          </div>
+          
+          <!-- 模态框底部按钮 -->
+          <div class="modal-footer">
+            <button id="editBankBtn" type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- 修改题库名称、标题模态框 -->
+
+    <!-- 确认删除模态框 -->
+    <div class="modal fade bs-example-modal-sm" id="sureToDelete" tabindex="-1" role="dialog" aria-labelledby="sureToDelete" data-the-bank=-1>
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          
+          <!-- 模态框标题栏 -->
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">确认所选题库吗？</h4>
+          </div>
+          
+          <!-- 模态框主体内容 -->
+          <div class="modal-body text-center">
+            <h3>
+                删除的题库可以在回收站里找到！
+            </h3>
+            <br>
+            <button  type="button" class="btn btn-danger recycleBank" data-dismiss="modal">删除</button>
+            <button id="deleteCancel" type="button" class="btn btn-success" data-dismiss="modal">取消</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- 确认删除模态框结束 -->
+    <input id="initCache" type="hidden" th:value="${bankList}"/>
+</body>
+
+</html>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+ PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+	<!--连接mysql数据库的驱动 ，改location="自己工程下数据库的jar包"-->
+	<classPathEntry location="E:\eclipse_o\local\web02\src\main\resources\mysql-connector-java-5.1.6-bin.jar" />
+	<context id="DB2Tables" targetRuntime="MyBatis3">
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+
+		<!--数据库的用户名，密码   改jdbcConnection="自己工程的数据库连接"-->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://localhost:3306/web614" userId="root" password="bt7145810">
+		</jdbcConnection>
+		
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+		
+		<!--自动生成实体类的文件    ，改targetPackage="放置自动生成文件的目录"  -->
+		<javaModelGenerator targetPackage="com.neuedu.web02.entity" targetProject="../../../src">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+		
+		
+		<!--自动生成表的操作语句(映射文件)    ，改targetPackage="放置自动生成文件的目录"  -->
+		<sqlMapGenerator targetPackage="main.resources.mapper" targetProject="../../../src">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+		
+		
+		<!--自动生成dao类()          ，改targetPackage="放置自动生成的DAO文件的目录"  -->
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.neuedu.web02.dao" targetProject="../../../src">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+		
+		<!-- 要新生成的数据库表，注意：已经生成成功的,一定要注释掉,否则会覆盖.我们只生成新表！ -->		
+        <!-- <table tableName="answerquestion" domainObjectName="AnswerQuestion"/>
+         <table tableName="bank" domainObjectName="Bank"/>
+         <table tableName="bankfolder" domainObjectName="BankFolder"/>
+         <table tableName="bankpurchase" domainObjectName="BankPurchase"/>
+         <table tableName="choice" domainObjectName="Choice"/>
+         <table tableName="bankteachermapping" domainObjectName="BankTeacherMapping"/>
+         <table tableName="choicequestion" domainObjectName="ChoiceQuestion"/>
+         
+         <table tableName="exam" domainObjectName="Exam"/>
+         <table tableName="judgequestion" domainObjectName="Judgequestion"/>
+         <table tableName="label" domainObjectName="Label"/>
+         <table tableName="message" domainObjectName="Message"/>
+         <table tableName="order" domainObjectName="Order"/>
+         <table tableName="paper" domainObjectName="Paper"/>
+         
+         <table tableName="paperfolder" domainObjectName="PaperFolder"/>
+         <table tableName="paperpurchase" domainObjectName="PaperPurchase"/>
+         <table tableName="paperusermapping" domainObjectName="PaperUserMapping"/>
+         <table tableName="picturerecordmapping" domainObjectName="PictureRecordMapping"/>
+         <table tableName="questionsectionmapping" domainObjectName="QuestionSectionMapping"/>
+         <table tableName="section" domainObjectName="Section"/>
+         
+         <table tableName="type" domainObjectName="Type"/>
+         <table tableName="user" domainObjectName="User"/>
+         <table tableName="useranswer" domainObjectName="UserAnswer"/>
+         <table tableName="userexamrecord" domainObjectName="UserExamRecord"/> 
+         <table tableName="orderinfo" domainObjectName="OrderInfo"/>-->
+         <table tableName=""></table>
+         
+	</context>
+
+</generatorConfiguration>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script src="../bank/js/jquery-2.2.4.js" th:src="@{static/bank/js/jquery-2.2.4.js}"></script>
+	<script type="text/javascript" th:inline="javascript">
+		$(function(){
+			console.log("inner");
+			var text = $("#initCache").val();
+			var bankList = [[${bankList}]];
+			console.log("bankList:",bankList);
+			console.log("text:",text);
+		})
+		
+	</script>
+	<input id="initCache" type="hidden" th:value="${bankList}"/>
+</body>
+</html>
