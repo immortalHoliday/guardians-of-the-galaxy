@@ -13,10 +13,46 @@
 
     <link href="favicon.ico" th:href="@{static/pages/favicon.ico}" rel="shortcut icon"> 
     <link href="../bank/css/bootstrap.min.css" th:href="@{static/bank/css/bootstrap.min.css}" rel="stylesheet">
-    <link href="../bank/css/bootstrap.min.css" th:href="@{static/bank/css/font-awesome.min.css}" rel="stylesheet">
+    <link href="../bank/css/font-awesome.min.css" th:href="@{static/bank/css/font-awesome.min.css}" rel="stylesheet">
 
-    <link href="../bank/css/bootstrap.min.css" th:href="@{static/bank/css/animate.min.css}" rel="stylesheet">
+    <link href="../bank/css/animate.min.css" th:href="@{static/bank/css/animate.min.css}" rel="stylesheet">
     <link href="../bank/css/style.min.css" th:href="@{static/bank/css/style.min.css}" rel="stylesheet">
+
+    <style type="text/css">
+        /*a  upload */
+        .a-upload {
+            padding: 4px 10px;
+            height: 20px;
+            line-height: 20px;
+            position: relative;
+            cursor: pointer;
+            color: #888;
+            background: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+            display: inline-block;
+            *display: inline;
+            *zoom: 1
+        }
+
+        .a-upload  input {
+            position: absolute;
+            font-size: 100px;
+            right: 0;
+            top: 0;
+            opacity: 0;
+            filter: alpha(opacity=0);
+            cursor: pointer
+        }
+
+        .a-upload:hover {
+            color: #444;
+            background: #eee;
+            border-color: #ccc;
+            text-decoration: none
+        }
+    </style>
 
 </head>
 
@@ -114,7 +150,7 @@
 
             <!-- 这里放置题库，使用模板生成 -->
             <!-- 一个题库 -->
-            <div class="col-sm-4" th:each="bank : ${bankList}" th:id="@{'bank_'+${bank.id}}">
+            <div class="col-sm-4" th:each="bank : ${bankList}" th:id="@{'bank_'+${bank.id}}" th:data-bank-id="${bank.id}">
                 <div class="ibox float-e-margins" >
 
                     <!-- 题库开头标题栏 -->
@@ -132,14 +168,25 @@
 
                                 <li>
                                     
-                                    <a href="#">
-                                        <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                                    <a class="shareBank" data-toggle="modal" data-target="#shareBankModal" th:if="${not #maps.containsKey(bankTeacherMap, bank.id)}">
+                                        <span class="glyphicon glyphicon-share" aria-hidden="true" ></span>
                                         分享题库
                                     </a>
                                 </li>
 
                                 <li>
-                                    <a class="editBank" th:data-editBankId="${bank.id}" data-toggle="modal" data-target="#editBankModal">
+                                    <!-- 最宝贵的例子 呜呜呜 -->
+                                    <!-- <a th:if="${0 == autMap[bank.id+'_'+1]}">
+                                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                        编辑题库
+                                    </a>
+
+                                     <a th:if="${1 == autMap[bank.id+'_'+1]}" class="editBank" th:data-editBankId="${bank.id}" data-toggle="modal" data-target="#editBankModal">
+                                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                        编辑题库
+                                    </a> -->
+
+                                    <a th:if="${not #maps.containsKey(bankTeacherMap, bank.id)}" class="editBank" th:data-editBankId="${bank.id}" data-toggle="modal" data-target="#editBankModal">
                                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                                         编辑题库
                                     </a>
@@ -163,7 +210,7 @@
                                 </li>
 
                                 <li>
-                                    <a href="#">
+                                    <a class="archiveA" data-toggle="modal" data-target="#sureToArchive">
                                         <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
                                         归档
                                     </a>
@@ -185,14 +232,15 @@
                     <div class="ibox-content">
                         <a th:href="@{'bankShowQuestionPage?thisId='+${bank.id}}">
                             <h2 th:data-title-id="${bank.id}" th:text="${bank.name}">
+                                
                                 <br/>
                             </h2>
                         </a>
                         
-                        <p th:data-body-id="${bank.id}" th:text="${bank.description}">
-                            
-                        </p>
+                        <p style="color:#FF8C00" th:if="${#maps.containsKey(bankTeacherMap, bank.id)}" th:data-body-id="${bank.id}" th:text="${'来自【'+bankTeacherMap[bank.id]+'】的分享'}"></p>
                         
+                        <p th:if="${not #maps.containsKey(bankTeacherMap, bank.id)}" th:data-body-id="${bank.id}" th:text="${bank.description}"></p>
+
                         <!-- 使用分割线 -->
                         <h5 class="page-header"></h5>
 
@@ -202,9 +250,27 @@
 
                             <small>道题</small>
                             </div>
-
+                            
                             <div class="col-sm-4 col-sm-offset-4">
-                            <a th:data-addbtn-id="${bank.id}" th:href="@{'bankAddQuestionPage?thisId='+${bank.id}}" class="btn btn-info btn-sm">
+
+                            <!-- 这应该是实际的真条件 -->
+                            <a th:if="${0 == autMap[bank.id+'_'+1]}" th:data-addbtn-id="${bank.id}" th:href="@{'bankAddQuestionPage?thisId='+${bank.id}}" class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                添加试题
+                            </a>
+                            
+                            <!-- 现在用于测试，所以把1作为假条件 -->
+                            <a th:if="${1 == autMap[bank.id+'_'+1]}" class="btn btn-info btn-sm" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="没有添加题目权限">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                添加试题
+                            </a>
+
+                            <!-- <a th:if="${null == autMap[bank.id+'_'+1]}" th:data-addbtn-id="${bank.id}" th:href="@{'bankAddQuestionPage?thisId='+${bank.id}}" class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                添加试题
+                            </a> -->
+
+                            <a th:if="${null == autMap[bank.id+'_'+1]}" th:data-addbtn-id="${bank.id}" data-toggle="modal" data-target="#chooseAddWay" class="btn btn-info btn-sm">
                                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                 添加试题
                             </a>
@@ -267,7 +333,6 @@
                 <label for="message-text" class="control-label">*题库描述：</label>
                 <textarea class="form-control" id="description"></textarea>
               </div>
-
             </form>
           </div>
           
@@ -282,7 +347,7 @@
     <!-- 新建题库模态框 -->
 
     <!-- 修改题库名称、标题模态框 -->
-    <div class="modal fade" id="editBankModal" tabindex="-1" role="dialog" aria-labelledby="EditBankModal">
+    <div class="modal fade" id="editBankModal" tabindex="-1" role="dialog" aria-labelledby="editBankModal">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           
@@ -326,29 +391,246 @@
       <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
           
-          <!-- 模态框标题栏 -->
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            <h4 class="modal-title">确认所选题库吗？</h4>
-          </div>
+              <!-- 模态框标题栏 -->
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">确认删除所选题库吗？</h4>
+              </div>
+              <!-- 模态框标题栏结束 -->
           
-          <!-- 模态框主体内容 -->
-          <div class="modal-body text-center">
-            <h3>
-                删除的题库可以在回收站里找到！
-            </h3>
-            <br>
-            <button  type="button" class="btn btn-danger recycleBank" data-dismiss="modal">删除</button>
-            <button id="deleteCancel" type="button" class="btn btn-success" data-dismiss="modal">取消</button>
-          </div>
+              <!-- 模态框主体内容 -->
+              <div class="modal-body text-center">
+                <h3>
+                    删除的题库可以在回收站里找到！
+                </h3>
+                <br>
+                <button type="button" class="btn btn-danger recycleBank" data-dismiss="modal">删除</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal">取消</button>
+              </div>
+              <!-- 模态框主体内容结束 -->
 
         </div>
       </div>
     </div>
     <!-- 确认删除模态框结束 -->
+
+    <!-- 确认归档模态框 -->
+    <div class="modal fade bs-example-modal-sm" id="sureToArchive" tabindex="-1" role="dialog" aria-labelledby="sureToArchive" data-the-bank=-1>
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          
+              <!-- 模态框标题栏 -->
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">确认归档所选题库吗？</h4>
+              </div>
+              <!-- 模态框标题栏结束 -->
+          
+              <!-- 模态框主体内容 -->
+              <div class="modal-body text-center">
+                <h3>
+                    归档的题库可以在回收站里找到！
+                </h3>
+                <br>
+                <button type="button" class="btn btn-danger archiveBank" data-dismiss="modal">归档</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal">取消</button>
+              </div>
+              <!-- 模态框主体内容结束 -->
+
+        </div>
+      </div>
+    </div>
+    <!-- 确认归档模态框结束 -->
+
+    <!-- 分享模态框 -->
+    <div class="modal fade" id="shareBankModal" tabindex="-1" role="dialog" aria-labelledby="shareBankModal" data-the-bank=-1 data-the-userid=-1>
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <!-- 模态框标题栏 -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title" id="shareBankModalLabel">分享题库</h2>
+            </div>
+            <!-- 模态框标题栏结束 -->
+
+            <!-- 模态框主体内容 -->
+            <div class="modal-body">
+                <form>
+
+                  <div class="form-group">
+                    <label for="recipient-name" class="control-label">*用户账号 <small style="color:#1c84c6;">邮箱或者电话</small>：</label>
+                    <input type="text" class="form-control" id="userAccount">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="message-text" class="control-label">*用户名称：</label>
+                    <input type="text" class="form-control" id="userName" disabled="true"></textarea>
+                  </div>
+
+                  <div class="alert alert-info">
+                        <br>
+                        <div>
+                            <div>
+                                <label>请配置以下权限：</label>
+                            </div>
+                            
+                            <br>
+                            <!-- 增加题目权限 -->
+                            <div id="allowAddQuestion" data-aut-selected=-1 data-aut-type=1>
+                                <span>
+                                    <i class="fa fa-square-o fa-lg" aria-hidden="true"></i>
+                                </span>
+                                <label>
+                                    允许用户增加题目
+                                </label>
+                                
+                            </div>
+                            <!-- 增加题目权限结束 -->
+                            <br>
+                            <!-- 修改题目权限 -->
+                            <div id="allowEditQuestion" data-aut-selected=-1 data-aut-type=2>
+                                <span>
+                                    <i class="fa fa-square-o fa-lg" aria-hidden="true"></i>
+                                </span>
+                                <label>
+                                    允许用户修改题目
+                                </label>
+
+                            </div>
+                            <!-- 修改题目权限结束 -->
+                            <br>
+                            <!-- 删除题目权限 -->
+                            <div id="allowReomveQuestion" data-aut-selected=-1 data-aut-type=3>
+                                <span>
+                                    <i class="fa fa-square-o fa-lg" aria-hidden="true"></i>
+                                </span>
+                                <label>
+                                    允许用户删除题目
+                                </label>
+
+                            </div>
+                            <!-- 删除题目权限结束 -->
+                        </div>
+                  </div>
+
+                </form>
+            </div>
+            <!-- 模态框主体内容结束 -->
+
+            <div class="modal-footer text-center"> 
+                <button id="shareConfirm" type="button" class="btn btn-primary" data-dismiss="modal">分享</button>
+                <button id="shareCancel" type="button" class="btn btn-success" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+      </div>
+    </div>
+    <!-- 分享模态框结束 -->
+
+    <!-- 选择导入方式 -->
+    <div class="modal fade" id="chooseAddWay" tabindex="-1" role="dialog" aria-labelledby="chooseAddWay" data-the-bank=-1 data-the-userid=-1>
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <!-- 模态框标题栏 -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title" id="chooseWayModalLabel">添加题目</h2>
+            </div>
+            <!-- 模态框标题栏结束 -->
+
+            <!-- 模态框主体内容 -->
+            <div class="modal-body">
+                <div>
+                    <h3>请选择添加题目方式</h3>
+                </div>
+                <div class="alert alert-info">
+                    
+                    <div class="row">
+                    
+                        <div id="importByFrom" class="col-sm-6 text-center">
+                            <a id="addByFromA">
+                                <i class="fa fa-align-justify fa-5x" style="color: black" aria-hidden="true"></i>
+                                <h3>通过表单录入</h3>
+                                <!-- bankAddQuestionPage?thisId='+${bank.id} -->
+                            </a>
+                            
+                        </div>
+
+                        <div  class="col-sm-6 text-center">
+                            <a id="importByExcel" data-toggle="modal" data-target="#addByExcelModal">
+                                <i class="fa fa-file-excel-o fa-5x" style="color: rgb(34,117,71);" aria-hidden="true"></i>
+                                <h3>通过excel批量录入</h3>
+                            </a>
+                        </div>
+                        
+                    </div>
+                </div>
+
+            </div>
+            <!-- 模态框主体内容结束 -->
+        </div>
+      </div>
+    </div>
+    <!-- 选择导入方式结束 -->
+
+    <!-- 使用excel导入 -->
+    <div class="modal fade" id="addByExcelModal" tabindex="-1" role="dialog" aria-labelledby="addByExcelModal" data-the-bank=-1 data-the-userid=-1>
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <!-- 模态框标题栏 -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title" id="addByExcelModalLabel">Excel批量导入</h2>
+            </div>
+            <!-- 模态框标题栏结束 -->
+
+            <!-- 模态框主体内容 -->
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    
+                    <div class="row">
+
+                        <div id="importByExcelDiv" class="col-sm-6 text-center">
+                            <a href="/exportexcel">
+                                <i class="fa fa-file-excel-o fa-5x" style="color: rgb(34,117,71);" aria-hidden="true"></i>
+                                <h3>下载excel模板</h3>
+                            </a>
+                        </div>
+                        
+                        <div id="importByExcelFormArea" class="col-sm-6 text-center">
+                            <form id="importByExcelForm" method="post" action="/importexcel" enctype="multipart/form-data">
+                                <input type="file" name="file" title="上传excel文件">
+                                <!-- <a class="a-upload">
+                                    <input type="file" name="file" title="上传excel文件">点击这里上传文件
+                                </a> -->
+
+                                <input type="submit" value="导入">
+                            </form>
+                        </div>
+
+                        
+                    </div>
+                </div>
+
+            </div>
+            <!-- 模态框主体内容结束 -->
+        </div>
+      </div>
+    </div>
+    <!-- 使用excel导入结束 -->
+    
     <input id="initCache" type="hidden" th:value="${bankList}"/>
 </body>
-
 </html>

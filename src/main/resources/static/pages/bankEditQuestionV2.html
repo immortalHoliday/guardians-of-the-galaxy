@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>牛X考试平台-添加题目</title>
+    <meta name="keywords" content="牛X测试平台,老师在线创建题库、在线创建试卷、邮件邀请学生考试">
+    <meta name="description" content="牛X测试平台是一个完全响应式，基于Bootstrap3最新版本开发的扁平化平台，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+
+    <link href="favicon.ico" th:href="@{static/pages/favicon.ico}" rel="shortcut icon"> 
+    <link href="../bank/css/bootstrap.min.css" th:href="@{static/bank/css/bootstrap.min.css}" rel="stylesheet">
+    <link href="../bank/css/font-awesome.min.css" th:href="@{static/bank/css/font-awesome.min.css}" rel="stylesheet">
+
+    <link href="../bank/css/animate.min.css" th:href="@{static/bank/css/animate.min.css}" rel="stylesheet">
+    <link href="../bank/css/style.min.css" th:href="@{static/bank/css/style.min.css}" rel="stylesheet">
+    <link href="../bank/css/jquery.editable-select.css" th:href="@{static/bank/css/jquery.editable-select.css}" rel="stylesheet"  type="text/css"/>
+    <link href="../bank/font-awesome/css/font-awesome.min.css" th:href="@{static/bank/font-awesome/css/font-awesome.min.css}" rel="stylesheet"  type="text/css"/>
+
+    <script src="../bank/js/jquery-2.2.4.js" th:src="@{static/bank/js/jquery-2.2.4.js}"></script>
+    <script src="../bank/jquery-validation/dist/jquery.validate.js" th:src="@{static/bank/jquery-validation/dist/jquery.validate.js}"></script>
+    <script src="../bank/jquery-validation/dist/localization/messages_zh.js" th:src="@{static/bank/jquery-validation/dist/localization/messages_zh.js}"></script>
+    <script type="text/javascript">
+        //为验证器绑定方法
+        $.validator.setDefaults({
+            submitHandler: function() {
+                console.log("点击添加按钮---------------->");
+                // 题干
+                var questionBody = $("#questionBody").val();
+                console.log("题干:",questionBody);
+
+                // 题目难度
+                var diffLevel = $("label[data-difflevel-choiced=1]").attr('data-difflevel');
+                console.log("题目难度diffLevel:",diffLevel);
+
+                // 题目方向
+                var labelText = $('#editable-select_sele').val();
+                // labelId=-1 表示这个知识点是新知识点
+                var labelId = $('#editable-select').val();
+                if(isEmpty(labelId)){
+                    labelId = -2;   
+                }
+                console.log("题目方向文本labelText:",labelText);
+                console.log("题目方向id labelId:",labelId);
+
+                // 题型
+                var questionType = $("#questionSececter").val(); 
+                var questionTypeText = $("#questionSececter").find("option:selected").text();
+                console.log("题型questionType:",questionType);
+                console.log("题型questionTypeText:",questionTypeText);
+
+                // 题目解析
+                var analysisTextArea = $('#analysisTextArea').val();
+                console.log("题目解析analysisTextAreaanalysisTextArea:",analysisTextArea);
+
+                // 所属题库
+                console.log("所属题库:","考虑从session中获取，或者直接在后台使用");
+                
+                var data = {};
+                data.typeid = questionType;
+                data.difflevel = diffLevel;
+                data.labelid = labelId;
+                data.labeltext = labelText;
+                data.analysis = analysisTextArea;
+                data.description = questionBody;
+                data.picUrl = picUrl;
+
+                //以上是都一样的 
+
+                if(0 == questionType){
+                    addSingleChoice(data);
+                    // console.log("添加单选题");
+                }else if(1 == questionType){
+                    addMutliChoice(data);
+                    // console.log("添加多选题");
+                }else if(2 == questionType){
+                    addShortQuestion(data);
+                    console.log("添加简答题");
+                }
+                
+                console.log("点击添加按钮---------------->");
+            }
+        });
+
+        // 处理单选题提交事件
+        function addSingleChoice(data){
+            // 答案
+            var answerArray = new Array();
+            var answer = $('label[data-chosen-option=1]').parent('.singleChoiceOption').children("div").children('input').val();
+            console.log("单选题答案:",answer);
+            answerArray.push(answer);
+
+            // 非答案选项
+            var nonAnswerArray = new Array();
+            $('label[data-chosen-option=0]').parent('.singleChoiceOption').children("div").children('input').each(function(){
+                if(!isEmpty($(this).val())){
+                    nonAnswerArray.push($(this).val());
+                }
+                
+            });
+            answerArray = JSON.stringify(answerArray);
+            nonAnswerArray = JSON.stringify(nonAnswerArray);
+            console.log("答案选项数组answerArray",answerArray);
+            console.log("非答案选项数组nonAnswerArray",nonAnswerArray);
+
+            data.nonAnswerArray = nonAnswerArray;
+            data.answerArray = answerArray;
+            console.log("addSingleChoice-data:",data);
+            data = JSON.stringify(data);
+            console.log("addSingleChoice-data-json:",data);
+
+            $.ajax({
+            // url: "/addSingleQuestionByJson",
+            url:"/editMutlipleQuestionByJson",
+            data: data,
+            //type、contentType必填,指明传参方式
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            success: function(response){
+            //前端调用成功后，可以处理后端传回的json格式数据。
+                console.log("response:",response);
+            }
+            });
+        }
+
+        // 处理多选题提交事件
+        function addMutliChoice(data){
+            console.log("mutlichoice-data:",data);
+            // 答案选项
+            var answerArray = new Array();
+            $('label[data-chosen-option=1]').parent('.mutlipleChoiceOption').children("div").children('input').each(function(){
+                if(!isEmpty($(this).val())){
+                    answerArray.push($(this).val());
+                }
+                
+            });
+            answerArray = JSON.stringify(answerArray);
+            console.log("单选题答案:",answerArray);
+
+            // 非答案选项
+            var nonAnswerArray = new Array();
+            $('label[data-chosen-option=0]').parent('.mutlipleChoiceOption').children("div").children('input').each(function(){
+                if(!isEmpty($(this).val())){
+                    nonAnswerArray.push($(this).val());
+                }
+                
+            });
+            nonAnswerArray = JSON.stringify(nonAnswerArray);
+            console.log("非答案选项nonAnswerArray",nonAnswerArray);
+
+            data.nonAnswerArray = nonAnswerArray;
+            data.answerArray = answerArray;
+
+            console.log("addMutliChoice-data:",data);
+            data = JSON.stringify(data);
+            console.log("addMutliChoice-data-json:",data);
+
+            $.ajax({
+            url:"/editMutlipleQuestionByJson",
+            data: data,
+            //type、contentType必填,指明传参方式
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            success: function(response){
+            //前端调用成功后，可以处理后端传回的json格式数据。
+                    console.log("response:",response);
+                }
+            });
+
+        }
+
+        // 处理简答题提交事件
+        function addShortQuestion(data){
+            console.log("short-question-data:",data);
+            // 只需要在获取参考答案即可
+            var $shortQuestionReferAnswer = $("#shortQuestionReferAnswer");
+            data.referAnswer = $shortQuestionReferAnswer.val();
+
+            console.log("addShortQuestion-data:",data);
+            data = JSON.stringify(data);
+            console.log("addShortQuestion-data-json:",data);
+
+            $.ajax({
+            // url: "/addSingleQuestionByJson",
+            url:"/editShortQuestionByJson",
+            data: data,
+            //type、contentType必填,指明传参方式
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            success: function(response){
+            //前端调用成功后，可以处理后端传回的json格式数据。
+                    console.log("response:",response);
+                }
+            });
+        }
+
+        // 添加验证规则和错误信息显示位置
+        $(function(){
+            // 验证信息
+            // 单选题和多选题现在只能验证写死的四个选项，而且前面的是否选中没有办法验证
+            $("#testform").validate({
+                // 更改验证信息显示位置
+                errorPlacement: function(error, element) {
+                        if("questionBody-error" == $(error).attr("id")){
+                            $(error).appendTo($("label[for='questionBody']"));
+                        }else if("singleChoiceOptionValue-error" == $(error).attr("id")){
+                            $(error).appendTo($("label[for='singleChoiceOptionValue']"));
+                        }else if("mutlipleChoiceOptionValue-error" == $(error).attr("id")){
+                            $(error).appendTo($("label[for='mutlipleChoiceOptionValue']"));
+                        }
+                        
+                    },
+                    // 验证信息使用的标签
+                    errorElement: "span",
+                    // 添加验证规则
+                    rules:{
+                        questionBody:{
+                            required:true
+                        }
+                        ,
+                        singleChoiceOptionValue:{
+                            required:true
+                        }
+                        ,
+                        mutlipleChoiceOptionValue:{
+                            required:true
+                        }
+                     },
+                     // 更改验证信息
+                     messages:{
+                        questionBody:"请添加题干",
+                        singleChoiceOptionValue:"请填满选项并选择一个正确答案",
+                        mutlipleChoiceOptionValue:"请添加至少三个选项,并选择两个正确答案"
+                     }
+            });
+        });  
+    </script>
+
+    <style>
+    .error{
+        color:red;
+    }
+    </style>
+</head>
+
+<body class="gray-bg">
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-sm-2">
+            <h2>修改题目</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a th:href="@{BankPageThy}">主页</a>
+                </li>
+                <li>
+                    <strong>添加题目</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-sm-2 col-sm-offset-4">
+                <h2>当前题库  - <small id="currentBank" th:text="${bank.name}"></small></h2>
+        </div>
+    </div>
+<!-- 要使用jquery-validation必须将所有的input放在一个form里，而且最后还要用submit -->
+<form id="testform">
+    <!-- 主体位置1 -->
+    <div class="wrapper wrapper-content">
+
+            <!-- 主体位置2 -->
+            <div class="row col-sm-12">
+
+                <!-- 这里放头 放体 -->
+                <div class="ibox float-e-margins" >
+
+                    <!-- 标题栏 -->
+                    <div class="ibox-title"> 
+
+                            <h2>编辑试题</h2>
+                    </div>
+                    <!-- 标题栏结束 -->
+
+                    <!-- 这里放主体内容 -->
+                    <div class="ibox-content">
+                    
+                    <!-- 在这里选择知识点、题型 -->
+                    <div class="row">
+                        <div class="col-sm-4  col-sm-offset-1">
+                                <h3>添加知识点</h3>
+                                <select  id="editable-select" class="form-control" >
+                                    <option th:each="label : ${labelList}" th:value="${label.labelid}" th:text="${label.labelname}" th:class="${label.labelid==question.labelid}? 'active' : ''"></option>
+                                </select> 
+                        </div>
+
+                        <div class="col-sm-4 col-sm-offset-1">
+                                <h3>题型
+                                    <i class="fa fa-asterisk" aria-hidden="true"></i> 
+                                </h3>
+                                <select class="form-control" id="questionSececter" disabled="disabled">
+                                  <option class="active" value="0" th:if="${0 == question.typeid}">单选题</option>
+                                  <option class="active" value="1" th:if="${1 == question.typeid}">多选题</option>
+                                  <option class="active" value="2" th:if="${2 == question.typeid}">简答题</option>
+                                </select>
+                        </div>
+                    </div>
+                    <!-- 在这里选择知识点、题型结束 -->
+
+
+                    <!-- 我就换个行，分个割 -->
+                    <br>
+                    <hr>
+                    <!-- 我割完了 -->
+
+                    <!-- 在这里添加题干、选项等 -->
+                    <div class="row">
+
+                        <!-- 题干 -->
+                        <div class="col-sm-12 form-group">
+                            <h3 >题干
+                                <i class="fa fa-asterisk" aria-hidden="true"></i> 
+                                <label for="questionBody" ></label>
+                            </h3>
+
+                            <textarea id="questionBody" name="questionBody" class="form-control" rows="4" th:text="${question.description}"></textarea>
+                        </div>
+                        <!-- 题干结束 -->
+
+                        <br/>
+                        <br/>
+
+                        <div class="col-sm-12 form-group">
+                            <!-- 用于提交图片url的input -->
+                            <input th:if="${not null != question.descriptioniconpath}" type="hidden" name="product_img" id="img_url" value="">
+
+                            <input th:if="${null != question.descriptioniconpath}" type="hidden" name="product_img" id="img_url" th:value="${question.descriptioniconpath}">
+
+                            <h3>题目图片:（可以选择一张题干配图）</h3>
+                            <input type="file" onchange="setImg(this)" accept="image/jpg,image/jpeg,image/png" name="file" id="inputImage" />
+                            <br>
+                            <h4>图片预览</h4>
+                            <div id="test-image-preview">
+                                <img th:if="${null != question.descriptioniconpath}" th:src="${ question.descriptioniconpath}" width="300px" height="200px">
+                            </div>
+                        </div>
+
+                        <!-- 单选题示例 -->
+                        <div data-question-type="singlechoice" th:if="${0 == question.typeid}" th:data-question-id="${question.id}">
+                            
+                            <!-- 选项 -->
+                            <div class="col-sm-12 form-group singleChoiceBodyArea">
+                                <h3>选项
+                                    <i class="fa fa-asterisk" aria-hidden="true"></i>
+                                    <label for="singleChoiceOptionValue"></label>
+                                </h3>
+                                <p class="text-success"> 
+                                    单选题的选项个数范围 2 到 26 ，正确选项个数为 1
+                                </p> 
+                                <br>
+
+
+        
+                                <!-- 一个选项 -->
+                                <div  class="col-sm-12 form-group singleChoiceOption" th:each="choice : ${choiceList}">
+                                    <!-- 答案选项 -->
+                                    <label class="col-sm-1 control-label text-right" style="margin-top: 4.5px" th:if="${#lists.contains(answerIdList, choice.choiceid)}" data-chosen-option=1>
+                                        <i class="fa fa-dot-circle-o fa-2x" aria-hidden="true"></i>
+                                    </label>
+
+                                    <!-- 非答案选项 -->
+                                    <label class="col-sm-1 control-label text-right" style="margin-top: 4.5px" th:if="${not #lists.contains(answerIdList, choice.choiceid)}" data-chosen-option=0>
+                                        <i class="fa fa-circle-o fa-2x" aria-hidden="true"></i>
+                                    </label>
+
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control singleChoiceOptionValue" name="singleChoiceOptionValue" th:value="${choice.content}">
+                                    </div>
+
+                                    <label class="col-sm-1 control-label removeSingleOption" style="margin-top: 3px">
+                                        <i class="fa fa-times fa-2x" aria-hidden="true"></i>
+                                    </label>
+                                </div>
+                                <!-- 一个选项结束 -->
+
+                            </div>
+                                                        
+                            <!-- 添加按钮 -->
+                            <div class="col-sm-12 form-group">
+                                <div class="col-sm-8 col-sm-offset-2">
+                                    <button id="addSingleChoiceButton" type="button" class="btn btn-block btn-outline btn-primary">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                    添加选项</button>
+                                </div>
+                            </div>
+                            <!-- 添加按钮结束 -->
+
+                        </div>
+                        <!-- 单选题结束 -->
+                        
+                        <!-- 多选题测试 -->
+                        <div data-question-type="mutliplechoice" th:if="${1 == question.typeid}" th:data-question-id="${question.id}">
+
+                            <!-- 选项 -->
+                            <div class="col-sm-12 form-group mutlipleChoiceBodyArea">
+                                <h3>选项
+                                    <i class="fa fa-asterisk" aria-hidden="true"></i>
+                                    <label for="mutlipleChoiceOptionValue"></label>
+                                </h3>
+                                <p class="text-success"> 
+                                    多选题的选项个数范围 3 到 26 ，正确选项个数至少为 2
+                                </p> 
+                                <br>
+                                
+                                <!-- 一个选项 -->
+                                <div  class="col-sm-12 form-group mutlipleChoiceOption" th:each="choice : ${choiceList}">
+                                    <!-- 答案选项 -->
+                                    <label class="col-sm-1 control-label text-right" style="margin-top: 4.5px" th:if="${#lists.contains(answerIdList, choice.choiceid)}" data-chosen-option=1>
+                                        <i class="fa fa-dot-circle-o fa-2x" aria-hidden="true"></i>
+                                    </label>
+
+                                    <!-- 非答案选项 -->
+                                    <label class="col-sm-1 control-label text-right" style="margin-top: 4.5px" th:if="${not #lists.contains(answerIdList, choice.choiceid)}" data-chosen-option=0>
+                                        <i class="fa fa-circle-o fa-2x" aria-hidden="true"></i>
+                                    </label>
+
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control singleChoiceOptionValue" name="singleChoiceOptionValue" th:value="${choice.content}">
+                                    </div>
+
+                                    <label class="col-sm-1 control-label removemutlipleOption" style="margin-top: 3px">
+                                        <i class="fa fa-times fa-2x" aria-hidden="true"></i>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- 添加按钮 -->
+                            <div class="col-sm-12 form-group">
+                                <div class="col-sm-8 col-sm-offset-2">
+                                    <button id="addMutlipleChoiceButton" type="button" class="btn btn-block btn-outline btn-primary">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                    添加选项</button>
+                                </div>
+                            </div>
+                            <!-- 添加按钮结束 -->
+                            
+                        </div>
+                        <!-- 多选题测试 -->
+
+                        <!-- 简答题测试 -->
+                        <div data-question-type="shortquestion" th:if="${2 == question.typeid}" th:data-question-id="${question.id}">
+                            
+                            <!-- 简答题选项 -->
+                            <div class="col-sm-12 form-group">
+                                <h3>参考答案
+                                </h3>
+                                <textarea id="shortQuestionReferAnswer" class="form-control" rows="4" th:text="${question.answer}"></textarea>
+                                <br>
+                            </div>
+                            <!-- 简答题选项结束 -->
+
+                        </div>
+                        <!-- 简答题测试 -->
+
+                    </div>
+                    <!-- 添加题干、选项结束 -->
+                    
+                    <!-- 在这里添加题目解析 -->
+                    <div class="row">
+                        <div data-question-type="analysis">
+                            <div class="col-sm-12 form-group">
+                                <h3>题目解析
+                                </h3>
+                                <p class="text-success"> 
+                                    考生/学员查答案时可显示该信息，达到学习的目的
+                                </p> 
+                                <textarea id="analysisTextArea" th:if="${null != question.analysis}" class="form-control" rows="4" th:text="${question.analysis}"></textarea>
+                                <textarea id="analysisTextArea" th:if="${null == question.analysis}" class="form-control" rows="4"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 添加题目解析结束 -->
+
+                    <br>
+
+                    <!-- 在这里添加题目难度 -->
+                    <div class="row">
+                        <div class="col-sm-8 form-group" data-question-type="level">
+                            <h3>难度
+                                <i class="fa fa-asterisk" aria-hidden="true"></i>
+                            </h3>
+                            <label class="radio-inline" id="easyLevel" data-difflevel=0 data-difflevel-choiced=1 th:if="${0 == question.difflevel}">
+                                <i class="fa fa-dot-circle-o fa-2x" aria-hidden="true"></i> 
+                                易
+                            </label>
+                            <label class="radio-inline" id="easyLevel" data-difflevel=0 data-difflevel-choiced=0 th:if="${0 != question.difflevel}">
+                                <i class="fa fa-circle-o fa-2x" aria-hidden="true"></i>
+                                易
+                            </label>
+
+                            <label class="radio-inline" id="easyLevel" data-difflevel=1 data-difflevel-choiced=1 th:if="${1 == question.difflevel}">
+                                <i class="fa fa-dot-circle-o fa-2x" aria-hidden="true"></i> 
+                                中
+                            </label>
+                            <label class="radio-inline" id="easyLevel" data-difflevel=1 data-difflevel-choiced=0 th:if="${1 != question.difflevel}">
+                                <i class="fa fa-circle-o fa-2x" aria-hidden="true"></i>
+                                中
+                            </label>
+
+                            <label class="radio-inline" id="easyLevel" data-difflevel=2 data-difflevel-choiced=1 th:if="${2 == question.difflevel}">
+                                <i class="fa fa-dot-circle-o fa-2x" aria-hidden="true"></i> 
+                                难
+                            </label>
+                            <label class="radio-inline" id="easyLevel" data-difflevel=2 data-difflevel-choiced=0 th:if="${2 != question.difflevel}">
+                                <i class="fa fa-circle-o fa-2x" aria-hidden="true"></i>
+                                难
+                            </label>
+                        </div>
+                    </div>  
+                    <!-- 添加题目难度结束 -->
+                    
+                    <!-- 在这里添加预览和添加按钮 -->
+                    <div class="row">
+                        <br>
+                        <div class="col-sm-8  col-sm-offset-2 text-center form-group" data-question-type="level">
+                            <button id="perviewQusetion" type="button" class="btn btn-outline btn-success">预览</button>
+                            <!-- <button id="confirmAddQuestion" name="confirmAddQuestion" type="button" class="btn btn-w-m btn-success">添加</button> -->
+                            <input name="confirmAddQuestion" type="submit" class="btn btn-w-m btn-success" value="保存">
+                        </div>
+                    </div>
+                    <!-- 在这里添加预览和添加按钮结束 -->
+
+                    </div>
+                    <!-- 这里放主体内容结束 -->
+
+                </div>
+                <!-- 这里放头 放体结束 -->
+            </div> 
+            <!-- 主体位置2结束 -->
+    </div>
+</form>
+
+    <!-- 主体位置1结束 -->
+
+   
+    <script src="../bank/js/bootstrap.min.js" th:src="@{static/bank/js/bootstrap.min.js}"></script>
+    <script src="../bank/js/content.min.js" th:src="@{static/bank/js/content.min.js}"></script>
+    <!-- <script src="../bank/js/bankCenter.js" th:src="@{static/bank/js/bankCenter.js}" type="text/javascript"></script> -->
+    <script src="../bank/js/jquery.editable-select.js" th:src="@{static/bank/js/jquery.editable-select.js}"></script>
+    <!-- <script src="../bank/js/addQuestionPage.js" th:src="@{static/bank/js/addQuestionPage.js}"></script> -->
+    <script src="../bank/js/editQuestion.js" th:src="@{static/bank/js/editQuestion.js}"></script>
+    <script src="../bank/js/template.js" th:src="@{static/bank/js/template.js}"></script>
+    
+
+
+    <script type="text/javascript" th:inline="javascript">
+        // 使用输入搜索框所必须的
+        $('#editable-select').editableSelect({ 
+           bg_iframe: false,
+
+           case_sensitive: false, 
+           items_then_scroll: 5,
+           isFilter:false
+        }); 
+    </script>
+
+    <!-- 修改题库名称、标题模态框 -->
+    <div class="modal fade" id="editBankModal" tabindex="-1" role="dialog" aria-labelledby="EditBankModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          
+          <!-- 模态框标题栏 -->
+          <div class="modal-header">
+            <button type="button" id="closeModalButton" class="close" data-dismiss="modal" aria-label="Close" th:href="@{'BankPage'}">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="editBankLabel">编辑题库</h4>
+          </div>
+          
+          <!-- 模态框主体内容 -->
+          <div class="modal-body">
+            <form>
+
+              <div class="form-group">
+                <label for="recipient-name" class="control-label">*题库名称：</label>
+                <input type="text" class="form-control" id="newName">
+              </div>
+
+              <div class="form-group">
+                <label for="message-text" class="control-label">*题库描述：</label>
+                <textarea class="form-control" id="newDescription"></textarea>
+              </div>
+
+            </form>
+          </div>
+          
+          <!-- 模态框底部按钮 -->
+          <div class="modal-footer">
+            <button id="editBankBtn" type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+</body>
+
+</html>

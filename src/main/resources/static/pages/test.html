@@ -5,17 +5,26 @@
 	<title>Document</title>
 </head>
 <body>
-	<script src="../bank/js/jquery-2.2.4.js" th:src="@{static/bank/js/jquery-2.2.4.js}"></script>
-	<script type="text/javascript" th:inline="javascript">
-		$(function(){
-			console.log("inner");
-			var text = $("#initCache").val();
-			var bankList = [[${bankList}]];
-			console.log("bankList:",bankList);
-			console.log("text:",text);
-		})
-		
-	</script>
-	<input id="initCache" type="hidden" th:value="${bankList}"/>
+	<form method="post" action="/importexcel" enctype="multipart/form-data">
+    <input type="file" name="file" title="上传excel文件">
+
+    <input type="submit" value="导入">
+    <p>测试下载模板excel</p>
+    
+    <br/>
+    <a href="/exportexcel">导出到excel,(模拟了一些数据,导出到excel)</a>
+
+    <div>
+        <p>商品图片:
+            <input type="file" onchange="setImg(this)" accept="image/jpg,image/jpeg,image/png" name="file" id="inputImage" />
+        </p>
+        <div id="test-image-preview">
+        	<p>图片预览</p>
+            <img src="" id="img" width="200px" height="200px" />
+        </div>
+    </div>
+</form>
+<script src="../bank/js/jquery-2.2.4.js" th:src="@{static/bank/js/jquery-2.2.4.js}"></script>
+<script src="../bank/js/uploadImg.js" th:src="@{static/bank/js/uploadImg.js}" type="text/javascript"></script>
 </body>
 </html>

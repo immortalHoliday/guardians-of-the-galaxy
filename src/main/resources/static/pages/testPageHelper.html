@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<p></p>
+
+	<script src="../bank/js/jquery-2.2.4.js" th:src="@{static/bank/js/jquery-2.2.4.js}"></script>
+
+	<script type="text/javascript">
+		$(function(){
+			$.ajax({
+			type:'get',
+	        url:'/testPagerHelper',
+	        contentType:'application/json;charset=utf-8',
+	        data:{"a":1},
+	        dataType:"text",    
+	        success:function(data){
+	        	console.log(data);
+	        },
+	        error:function(){
+	            alert('用户题库分享异步提交失败');
+	        }
+		});
+		})
+	</script>
+</body>
+</html>

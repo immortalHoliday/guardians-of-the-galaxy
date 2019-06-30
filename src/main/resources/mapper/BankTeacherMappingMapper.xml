@@ -240,4 +240,11 @@
     where bankid = #{bankid,jdbcType=INTEGER}
       and teacherid = #{teacherid,jdbcType=INTEGER}
   </update>
+  
+  <select id="selectShareFromList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT *
+	FROM bankteachermapping
+	WHERE bankid IN (SELECT bankid FROM bankteachermapping WHERE teacherid=#{userid} AND state=0)
+	AND (state=2 or state=3)
+  </select>
 </mapper>

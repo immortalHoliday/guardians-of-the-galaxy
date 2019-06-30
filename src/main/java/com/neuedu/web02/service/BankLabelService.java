@@ -11,4 +11,6 @@ public interface BankLabelService {
 	List<Label> getLabelListByUserId(Integer userId);
 	
 	String getLabelById(Integer labelId);
+	
+	Label checkExistByContentAndUserId(String content, Integer userId);
 }

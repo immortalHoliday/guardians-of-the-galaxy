@@ -23,7 +23,6 @@
             margin-left: 30px;
         }
     </style>
-    </style>
 
 </head>
 
@@ -117,15 +116,28 @@
 
                     <!-- 题库主体内容 -->
                     <div class="ibox-content">
-                        <a th:href="@{'bankShowQuestionPage?thisId='+${bank.id}}">
+                        <a th:href="@{'bankShowQuestionPageRecycle?thisId='+${bank.id}}">
                             <h2 th:data-title-id="${bank.id}" th:text="${bank.name}">
                                 <br/>
                             </h2>
                         </a>
                         
-                        <p th:data-body-id="${bank.id}" th:text="${bank.description}">
-                            
+                        <p th:if="${not #maps.containsKey(bankTeacherMap, bank.id)}" th:data-body-id="${bank.id}" th:text="${bank.description}"> 
                         </p>
+
+                        <p style="color:#FF8C00" th:if="${#maps.containsKey(bankTeacherMap, bank.id)}" th:text="${'来自【'+bankTeacherMap[bank.id]+'】的分享'}"> 
+                        </p>
+
+                        <!-- 使用分割线 -->
+                        <h5 class="page-header"></h5>
+
+                        <div class="row"> 
+                            <div class="col-sm-3 col-sm-offset-1">
+                                <h1 style="display: inline; color: #ED9121;" th:text="${countMap[bank.id]}"></h1>
+
+                                <small>道题</small>
+                            </div>
+                        </div>
                     </div>
                     <!-- 题库主体内容结束 -->
 

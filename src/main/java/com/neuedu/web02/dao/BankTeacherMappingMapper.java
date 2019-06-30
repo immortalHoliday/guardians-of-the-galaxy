@@ -33,4 +33,6 @@ public interface BankTeacherMappingMapper {
     int updateByPrimaryKeySelective(BankTeacherMapping record);
 
     int updateByPrimaryKey(BankTeacherMapping record);
+    
+    List<BankTeacherMapping> selectShareFromList(@Param("userid") Integer id);
 }

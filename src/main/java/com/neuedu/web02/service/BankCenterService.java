@@ -2,7 +2,9 @@ package com.neuedu.web02.service;
 
 import java.util.ArrayList;
 
+import com.github.pagehelper.PageInfo;
 import com.neuedu.web02.entity.Bank;
+import com.neuedu.web02.entity.BankTeacherMapping;
 
 public interface BankCenterService {
 	Bank insertBank(Bank band);
@@ -10,6 +12,8 @@ public interface BankCenterService {
 	ArrayList<Bank> getAllBank(Integer userId);
 	
 	int bankIntoRecycle(Integer bankId);
+	
+	int bankArchive(Integer bankId);
 	
 	int editBank(Bank bank);
 	
@@ -29,4 +33,25 @@ public interface BankCenterService {
 	
 	Integer getQuestionCountByBankId(Integer bankId);
 	
+	Integer shareABank(Integer bankId, Integer userId, String autStr);
+	
+	/*获取分享给我的列表 */
+	ArrayList<BankTeacherMapping> getShareList(Integer userId);
+	
+	PageInfo<BankTeacherMapping> getShareListPage(Integer pageNum, Integer pageSize, Integer userId);
+	
+	/*获取我分享的列表*/
+	ArrayList<BankTeacherMapping> getShareFromMeList(Integer userId);
+	
+	PageInfo<BankTeacherMapping> getShareFromMeListPage(Integer pageNum, Integer pageSize, Integer userId);
+	
+	int updateBankTeacherMappingState(Integer bankId, Integer teacherId, Integer state);
+	
+	BankTeacherMapping findBTMByPrimaryKey(Integer bankId, Integer userId);
+	
+	int updateAutByBankIdAndTeaId(Integer bankId, Integer teacherId, String aut);
+	
+	int deleteBankTeacherMappingByBankIdAndTeaId(Integer bankId, Integer teacherId);
+	
+	ArrayList<Bank> getArchiveList(Integer userId);
 }

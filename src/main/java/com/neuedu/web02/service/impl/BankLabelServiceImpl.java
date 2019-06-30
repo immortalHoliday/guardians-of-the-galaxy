@@ -23,12 +23,6 @@ public class BankLabelServiceImpl implements com.neuedu.web02.service.BankLabelS
 		return id;
 	}
 
-	
-/*BankExample bankExample = new BankExample();
-		BankExample.Criteria criteria = bankExample.createCriteria();
-		criteria.andIdEqualTo(bank.getId());
-		int value = bankMapper.updateByExampleSelective(bank, bankExample);
-		return value;*/
 	@Override
 	public List<Label> getLabelListByUserId(Integer userId) {
 		LabelExample labelExample = new LabelExample();
@@ -45,6 +39,20 @@ public class BankLabelServiceImpl implements com.neuedu.web02.service.BankLabelS
 		Label label = labelMapper.selectByPrimaryKey(labelId);
 		
 		return label.getLabelname();
+	}
+
+	@Override
+	public Label checkExistByContentAndUserId(String content, Integer userId) {
+		LabelExample labelExample = new LabelExample();
+		LabelExample.Criteria labelCriteria = labelExample.createCriteria();
+		labelCriteria.andBackup2EqualTo(userId);
+		labelCriteria.andLabelnameEqualTo(content);
+		List<Label> list = labelMapper.selectByExample(labelExample);
+		if(null == list || 0 == list.size()) {
+			return null;
+		}else {
+			return list.get(0);
+		}	
 	}
 	
 }

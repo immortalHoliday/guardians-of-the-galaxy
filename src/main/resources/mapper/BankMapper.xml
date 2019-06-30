@@ -283,7 +283,7 @@
   <select id="selectUseableBankByCreaterId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
   	select bank.*
   	from bank join bankteachermapping on bank.id=bankteachermapping.bankid
-	WHERE bankteachermapping.teacherid=#{cid} and bank.deleteflag=0
+	WHERE bankteachermapping.teacherid=#{cid} and bank.deleteflag=0 AND (bankteachermapping.state=2 or bankteachermapping.state=0)
   </select>
   
   <select id="selectBankInRecycleByCreaterId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
