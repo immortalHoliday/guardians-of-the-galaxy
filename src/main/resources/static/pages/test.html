@@ -24,7 +24,90 @@
         </div>
     </div>
 </form>
+<div>
+    <p>echarts test</p>
+    <div id="bankCharts" style="width: 600px; height: 400px"></div>
+</div>
 <script src="../bank/js/jquery-2.2.4.js" th:src="@{static/bank/js/jquery-2.2.4.js}"></script>
 <script src="../bank/js/uploadImg.js" th:src="@{static/bank/js/uploadImg.js}" type="text/javascript"></script>
+<!-- <script src="../bank/js/echarts.all.js" th:src="@{static/bank/js/echarts.all.js}" type="text/javascript"></script> -->
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+
+<script type="text/javascript">
+    // $(function(){
+    //     var mycharts = echarts.init(document.getElementById('bankCharts'));
+
+    //     // mycharts.showLoading();
+
+    //     // var name[];
+    //     // var value[];
+    //     var u = {"bankId":13};
+
+    //     $.ajax({
+    //             type:'get',
+    //             url:'/getBankDiffLevelData',
+                
+    //             contentType:'application/json;charset=utf-8',//请求的字符编码
+    //             data:u,
+    //             dataType:"text",    
+    //             success:function(data){
+    //                 // 传来的是json字符串，所以首先要把json字符串转为js对象
+    //                 var jsonObj = JSON.parse(data);
+    //                 console.log("jsonObj:",jsonObj);
+    //                 var option = {
+    //                         title: {text: '基础雷达图'},
+    //                         tooltip: {trigger:"item"},
+    //                         legend: {data: ['题目难度']},
+    //                         radar: {// shape: 'circle',
+    //                         name: {textStyle: {color: '#fff',backgroundColor: '#999',borderRadius: 3,padding: [3, 5]}},
+    //                         indicator: [{ name: '易（easy）', max: 10},{ name: '中（medium）', max: 10},{ name: '难（hard）', max: 10}]},
+    //                         series: [{name: '难度分布图',type: 'radar',areaStyle: {normal: {}},
+    //                         data : [{value : [jsonObj.easy, jsonObj.medium, jsonObj.hard],name : '题目难度'}]}]
+    //                     };
+
+    //                 mycharts.setOption(option);
+    //             },
+    //             error:function(){
+    //                 alert('编辑题库异步提交失败');
+    //             }
+    //         });
+    // });
+
+    $(function(){
+        var mycharts = echarts.init(document.getElementById('bankCharts'));
+        var bankId = $("#bankCharts").attr("data-this-bank-id");
+        console.log("展示题库信息:",bankId);
+        var u = {"bankId":13};
+
+        $.ajax({
+                type:'get',
+                url:'/getBankDiffLevelData',
+                
+                contentType:'application/json;charset=utf-8',//请求的字符编码
+                data:u,
+                dataType:"text",    
+                success:function(data){
+                    // 传来的是json字符串，所以首先要把json字符串转为js对象
+                    var jsonObj = JSON.parse(data);
+                    console.log("jsonObj:",jsonObj);
+                    var option = {
+                            title: {text: '基础雷达图'},
+                            tooltip: {trigger:"item"},
+                            legend: {data: ['题目难度']},
+                            radar: {// shape: 'circle',
+                            name: {textStyle: {color: '#fff',backgroundColor: '#999',borderRadius: 3,padding: [3, 5]}},
+                            indicator: [{ name: '易（easy）', max: 10},{ name: '中（medium）', max: 10},{ name: '难（hard）', max: 10}]},
+                            series: [{name: '难度分布图',type: 'radar',areaStyle: {normal: {}},
+                            data : [{value : [jsonObj.easy, jsonObj.medium, jsonObj.hard],name : '题目难度'}]}]
+                        };
+
+                    mycharts.setOption(option);
+                },
+                error:function(){
+                    alert('展示信息异步提交失败');
+                }
+            });
+    });
+</script>
 </body>
 </html>

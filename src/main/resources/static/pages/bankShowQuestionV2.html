@@ -114,7 +114,7 @@
                             
                             <h5>
                             <span>
-                                <i class="fa fa-check-square-o fa-lg" aria-hidden="true"></i>
+                                <!-- <i class="fa fa-check-square-o fa-lg" aria-hidden="true"></i> -->
                                 <i class="fa fa-square-o fa-lg" aria-hidden="true"></i>
                             </span>
                                 单选题
@@ -200,7 +200,7 @@
                                 <div id="collapse_1" th:id="@{'collapse_'+${question.id}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_1">
                                 <!-- 选项部分+参考答案+题目解析 -->
                                 <div class="panel-body col-sm-4">
-                                    <div th:if="${null != question.descriptioniconpath}">
+                                    <div th:if="${null != question.descriptioniconpath && '' != question.descriptioniconpath}">
                                     <h3>题干图片</h3>
                                     <img th:src="${ question.descriptioniconpath}" width="300px" height="200px">
                                     </div>
@@ -261,7 +261,7 @@
                             
                             <h5>
                             <span>
-                                <i class="fa fa-check-square-o fa-lg" aria-hidden="true"></i>
+                                <!-- <i class="fa fa-check-square-o fa-lg" aria-hidden="true"></i> -->
                                 <i class="fa fa-square-o fa-lg" aria-hidden="true"></i>
                             </span>
                                 多选题
@@ -350,7 +350,7 @@
                                 <!-- 选项部分+参考答案+题目解析 -->
                                 <div class="panel-body col-sm-4">
 
-                                    <div th:if="${null != question.descriptioniconpath}">
+                                    <div th:if="${null != question.descriptioniconpath && '' != question.descriptioniconpath}">
                                     <h3>题干图片</h3>
                                     <img th:src="${ question.descriptioniconpath}" width="300px" height="200px">
                                     </div>
@@ -410,7 +410,7 @@
                             
                             <h5>
                             <span>
-                                <i class="fa fa-check-square-o fa-lg" aria-hidden="true"></i>
+                                <!-- <i class="fa fa-check-square-o fa-lg" aria-hidden="true"></i> -->
                                 <i class="fa fa-square-o fa-lg" aria-hidden="true"></i>
                             </span>
                                 简答题
@@ -497,7 +497,7 @@
                                 <!-- 选项部分+参考答案+题目解析 -->
                                 <div class="panel-body col-sm-4">
 
-                                    <div th:if="${null != question.descriptioniconpath}">
+                                    <div th:if="${null != question.descriptioniconpath && '' != question.descriptioniconpath}">
                                     <h3>题干图片</h3>
                                     <img th:src="${ question.descriptioniconpath}" width="300px" height="200px">
                                     </div>

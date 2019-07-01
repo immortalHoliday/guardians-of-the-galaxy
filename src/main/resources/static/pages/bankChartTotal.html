@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>牛X考试平台-404中心</title>
+    <meta name="keywords" content="牛X测试平台,老师在线创建题库、在线创建试卷、邮件邀请学生考试">
+    <meta name="description" content="牛X测试平台是一个完全响应式，基于Bootstrap3最新版本开发的扁平化平台，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+
+</head>
+
+<!-- <body style="background-color: rgb(44,52,60);"> -->
+<body class="gray-bg">
+
+    <!-- charts -->
+    <div class="row">
+        <div id="bankCharts" th:data-this-bank-id="${thisBankId}"  style="margin:50px auto; width: 1000px; height: 600px"></div>
+    </div>
+    
+
+    <script src="../bank/js/jquery.min.js" th:src="@{static/bank/js/jquery.min.js}"></script>
+    <!-- <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script> -->
+    <script src="../bank/js/echarts-all-3.js" th:src="@{static/bank/js/echarts-all-3.js}"></script>
+    
+    <script type="text/javascript">
+    $(function(){
+        //展示题目难度图表
+        var mycharts = echarts.init(document.getElementById('bankCharts'));
+
+        var bankId = $("#bankCharts").attr("data-this-bank-id");
+        console.log("展示题库信息:",bankId);
+        var u = {"bankId":bankId};
+
+        // option = {
+        //     backgroundColor: '#2c343c',
+        //     title: {text: '知识点分布图',left: 'center',top: 20,textStyle: {color: '#ccc'}},
+        //     tooltip : {trigger: 'item',formatter: "{a} <br/>{b} : {c} ({d}%)"},
+        //     visualMap: {show: false,min: 80,max: 600,inRange: {colorLightness: [0, 1]}},
+        //     series : [{name:'知识点',type:'pie',radius : '55%',center: ['50%', '50%'],
+        //     data:[{value:335, name:'直接访问'},{value:310, name:'邮件营销'},{value:274, name:'联盟广告'},{value:235, name:'视频广告'},
+        //     {value:400, name:'搜索引擎'}].sort(function (a, b) { return a.value - b.value; }),
+        //     roseType: 'radius',
+        //     label: {
+        //         normal: {textStyle: {color: 'rgba(255, 255, 255, 0.3)'}}},
+        //         labelLine: {normal: {lineStyle: {color: 'rgba(255, 255, 255, 0.3)'},smooth: 0.2,length: 10,length2: 20}},
+        //         itemStyle: {normal: {color: '#c23531',shadowBlur: 200,shadowColor: 'rgba(0, 0, 0, 0.5)'}},
+        //         animationType: 'scale',
+        //         animationEasing: 'elasticOut',
+        //         animationDelay: function (idx) {
+        //             return Math.random() * 200;
+        //         }
+        //     }
+        //     ]};
+
+        //     mycharts.setOption(option);
+
+        // //展示知识点分布图表ajax
+        $.ajax({
+                type:'get',
+                url:'/getLabelData',
+                
+                contentType:'application/json;charset=utf-8',//请求的字符编码
+                data:u,
+                dataType:"text",    
+                success:function(data){
+                    // 传来的是json字符串，所以首先要把json字符串转为js对象
+                    var jsonObj = JSON.parse(data);
+                    console.log("jsonObj:",jsonObj);
+                    var array = new Array();
+                    for(var key in jsonObj){
+                        var data={};
+                        data.value = jsonObj[key];
+                        data.name = key;
+                        console.log(key+"_"+jsonObj[key]);
+                        array.push(data);
+                    }
+                    console.log("array:",array);
+
+                    var option = {
+                        // backgroundColor: '#2c343c',
+                        backgroundColor: 'rgb(243,243,244)',
+                        title: {text: '知识点分布图',left: 'center',top: 20,textStyle: {color: 'rgb(153,153,153)'}},
+                        tooltip : {trigger: 'item',formatter: "{a} <br/>{b} : {c} ({d}%)"},
+                        // visualMap: {show: false,min: 80,max: 600,inRange: {colorLightness: [0, 1]}},
+                        series : [{name:'知识点',type:'pie',radius : '55%',center: ['50%', '50%'],
+                        // data:[{value:335, name:'直接访问'},{value:310, name:'邮件营销'},{value:274, name:'联盟广告'},{value:235, name:'视频广告'},{value:400, name:'搜索引擎'}].sort(function (a, b) { return a.value - b.value; }),
+                        data:array.sort(function (a, b) { return a.value - b.value; }),
+                        roseType: 'radius',
+                        label: {
+                            // normal: {textStyle: {color: 'rgba(255, 255, 255, 0.3)'}}},
+                            // labelLine: {normal: {lineStyle: {color: 'rgba(255, 255, 255, 0.3)'},smooth: 0.2,length: 10,length2: 20}},
+                            // itemStyle: {normal: {color: '#c23531',shadowBlur: 200,shadowColor: 'rgba(0, 0, 0, 0.5)'}},
+                            normal: {textStyle: {color: 'rgb(153, 153, 153)'}}},
+                            // labelLine: {normal: {lineStyle: {color: 'rgb(153, 153, 153)'},smooth: 0.2,length: 10,length2: 20}},
+                            labelLine: {normal: {lineStyle: {color: '#676a6c'},smooth: 0.2,length: 10,length2: 20}},
+                            // itemStyle: {normal: {color: '#c23531',shadowBlur: 200,shadowColor: 'rgba(0, 0, 0, 0.5)'}},
+                            itemStyle: {normal: {color: '#1ab394',shadowBlur: 200, shadowColor: 'rgba(0, 0, 0, 0.5)'}},
+                            animationType: 'scale',
+                            animationEasing: 'elasticOut',
+                            animationDelay: function (idx) {
+                                // return Math.random() * 200;
+                                return Math.random() * 2;
+                            }
+                        }
+                        ]};
+
+                    mycharts.setOption(option);
+                },
+                error:function(){
+                    alert('展示信息异步提交失败');
+                }
+        });
+    });
+</script>
+
+</body>
+
+</html>

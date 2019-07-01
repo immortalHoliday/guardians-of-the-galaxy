@@ -3,8 +3,10 @@ package com.neuedu.web02.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -24,20 +26,131 @@ import com.neuedu.web02.dao.BankMapper;
 import com.neuedu.web02.dao.OrderInfoMapper;
 import com.neuedu.web02.entity.Bank;
 import com.neuedu.web02.entity.BankTeacherMapping;
+import com.neuedu.web02.entity.Label;
 import com.neuedu.web02.entity.OrderInfo;
+import com.neuedu.web02.entity.Question;
 import com.neuedu.web02.entity.ShareItem;
 import com.neuedu.web02.entity.User;
 import com.neuedu.web02.service.BankCenterService;
+import com.neuedu.web02.service.BankChoiceService;
+import com.neuedu.web02.service.BankLabelService;
+import com.neuedu.web02.service.BankQuestionService;
 import com.neuedu.web02.service.BankUserService;
 import com.neuedu.web02.util.TimeUtil;
 
 @Controller
 public class BankMainPageController {
-
+	
 	@Autowired
 	BankCenterService bankService;
 	@Autowired
+	BankQuestionService questionService;
+	@Autowired
+	BankLabelService bankLabelService;
+	@Autowired
+	BankChoiceService bankChoiceService;
+	@Autowired
 	BankUserService userService;
+	
+	//添加一个新的题库，并返回新创建的题库对象
+	@RequestMapping(value = "/getLabelData", produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public  Map GetLabelData(HttpSession session)throws Exception {
+		User user = (User)session.getAttribute("user");
+		HashMap<String,Object> map = new HashMap<String, Object>();
+		List<Label> labelList = bankLabelService.getLabelListByUserId(user.getId());
+		List<Bank> bankList = bankService.getAllBank(user.getId());
+		List<Question> questionList;
+		
+		for(Label tempLabel : labelList) {
+			map.put(tempLabel.getLabelname(), 0);
+		}
+		
+		for(Bank tempBank : bankList) {
+			questionList = questionService.getQuestionListByBankId(tempBank.getId());
+			for(Question tempQuestion : questionList) {
+				if(-2 != tempQuestion.getLabelid()) {
+					String label = bankLabelService.getLabelById(tempQuestion.getLabelid());
+					Integer count = (Integer)map.get(label)+1;
+					map.put(label, count);
+				}
+			}
+		}
+		
+		return map;
+	}
+	
+	@RequestMapping("/getBankDiffLevelData")
+	@ResponseBody
+	//添加一个新的题库，并返回新创建的题库对象
+	public  Map GetBankDiffLevelData(HttpSession session,
+			@RequestParam(value="bankId",required=true) Integer bankId)throws Exception {
+		List<Question> list = questionService.getQuestionListByBankId(bankId);
+		HashMap<String,Object> map = new HashMap<String, Object>();
+		Bank bank = bankService.getBanKById(bankId);
+		Integer easy=0,mid=0,hard=0;
+		for(Question temp : list) {
+			if(0 == temp.getDifflevel()) {
+				easy++;
+			}else if(1 == temp.getDifflevel()){
+				mid++;
+			}else if(2 == temp.getDifflevel()) {
+				hard++;
+			}
+		}
+		
+		map.put("bankName", bank.getName());
+		map.put("easy", easy);
+		map.put("medium", mid);
+		map.put("hard", hard);
+		return map;
+	}
+	
+	@RequestMapping("/getBankTypeData")
+	@ResponseBody
+	//添加一个新的题库，并返回新创建的题库对象
+	public  Map GetBankTypeData(HttpSession session,
+			@RequestParam(value="bankId",required=true) Integer bankId)throws Exception {
+		List<Question> list = questionService.getQuestionListByBankId(bankId);
+		HashMap<String,Object> map = new HashMap<String, Object>();
+		Bank bank = bankService.getBanKById(bankId);
+		Integer singleChoice=0, mutlipleChoice=0, shortQuestion=0;
+		for(Question temp : list) {
+			if(0 == temp.getTypeid()) {
+				singleChoice++;
+			}else if(1 == temp.getTypeid()){
+				mutlipleChoice++;
+			}else if(2 == temp.getTypeid()) {
+				shortQuestion++;
+			}
+		}
+		
+		map.put("bankName", bank.getName());
+		map.put("singleChoice", singleChoice);
+		map.put("mutlipleChoice", mutlipleChoice);
+		map.put("shortQuestion", shortQuestion);
+		return map;
+	}
+	
+	@RequestMapping("/RouteToBankChart")
+	//使用模板模式进入进入题库初始页面
+	public ModelAndView RouteToBankChart(HttpSession session, HttpServletRequest req) {
+		ModelAndView mav = new ModelAndView("pages/bankChart");
+		Integer bankId = Integer.parseInt(req.getParameter("thisBankId"));
+		mav.addObject("thisBankId", bankId);
+		
+		return mav;
+	}
+	
+	@RequestMapping("/RouteToBankChartTotal")
+	//使用模板模式进入进入题库初始页面
+	public ModelAndView RouteToBankChartTotal(HttpSession session, HttpServletRequest req) {
+		ModelAndView mav = new ModelAndView("pages/bankChartTotal");
+		mav.addObject("thisBankId", 13);
+		
+		return mav;
+	}
+	
 	
 	@RequestMapping("/addNewBank")
 	@ResponseBody

@@ -74,6 +74,11 @@
             
             <!-- 创建题库按钮 -->
             <div class="col-sm-12 title-action">
+                <a th:href="@{'RouteToBankChartTotal'}" type="button" class="btn btn-info btn-lg" style="margin-right: 50px;">
+                    <span class="fa fa-area-chart" aria-hidden="true"></span>
+                    信息统计
+                </a>
+
                 <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#buildNewBankModal">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     创建题库
@@ -85,65 +90,6 @@
     </div>
 
     <div class="wrapper wrapper-content">
-        
-        <!-- 工具栏位置 -->
-        <div class="row">
-            <div class="col-sm-12">
-                <!-- 基本面板开始 -->
-                <div class="ibox float-e-margins">
-
-                    <!-- box的内容开始 -->
-                    <div class="ibox-content">
-
-                        
-                        <button href="../pages/mybankhomepage.html" th:href="@{static/pages/mybankhomepage.html}" class="btn btn-info">
-                            <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
-                            归档
-                        </button>
-                        
-                        <!-- <a href="../pages/mybankhomepage.html" th:href="@{static/pages/mybankhomepage.html}" class="btn btn-info">归档</a> -->
-                        <button href="../pages/mybankhomepage.html" th:href="@{static/pages/mybankhomepage.html}" class="btn btn-info">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                            删除
-                        </button>
-                        
-                        <button href="../pages/mybankhomepage.html" th:href="@{static/pages/mybankhomepage.html}" class="btn btn-info">
-                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                            重命名
-                        </button>
-
-                        <button href="../pages/mybankhomepage.html" th:href="@{static/pages/mybankhomepage.html}" class="btn btn-info">
-                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-                            移动到
-                        </button>
-
-                        <button href="../pages/mybankhomepage.html" th:href="@{static/pages/mybankhomepage.html}" class="btn btn-info">
-                            <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
-                            新建文件夹
-                        </button>
-                        
-                    </div>
-                    <!-- box内容结束 -->
-                </div>
-                <!-- 基本面板结束 -->
-            </div>
-        </div>
-        <!-- 工具栏位置结束 -->
-
-        <!-- 文件夹位置 -->
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="ibox float-e-margins">
-
-                    <div class="ibox-content">
-                        <h2>文件夹区域，这里提供文件夹的操作<br/></h2>
-                        <p>在 小新 上下载了一个jquery实现的虚拟文件夹，之后放到这里</p>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <!-- 文件夹位置结束 -->
 
         <!-- 题库位置 -->
         <div id="bankContainer" class="row">
@@ -192,11 +138,11 @@
                                     </a>
 
                                 </li>
-
+                                <!-- @{'bankAddQuestionPage?thisId='+${bank.id}} -->
                                 <li>
-                                    <a href="#">
+                                    <a th:href="@{'RouteToBankChart?thisBankId='+${bank.id}}">
                                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                                        题库查重
+                                        题库统计
                                     </a>
                                 </li>
 
@@ -558,7 +504,7 @@
                     
                         <div id="importByFrom" class="col-sm-6 text-center">
                             <a id="addByFromA">
-                                <i class="fa fa-align-justify fa-5x" style="color: black" aria-hidden="true"></i>
+                                <i class="fa fa-align-justify fa-5x" style="color: #676A6c" aria-hidden="true"></i>
                                 <h3>通过表单录入</h3>
                                 <!-- bankAddQuestionPage?thisId='+${bank.id} -->
                             </a>
